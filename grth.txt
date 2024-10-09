@@ -1,0 +1,225 @@
+image filter
+
+import cv2
+import matplotlib.pyplot as plt
+
+img=cv2.imread("1.jpg")
+
+img=cv2.cvtColor(img,cv2.COLOR_BGR2RGB)
+
+#box blur
+blurred_img1=cv2.blur(img,(10,10))
+
+#gaussian blur
+blurred_img2=cv2.GaussianBlur(img,(5,5),0)
+
+#median blur
+blurred_img3=cv2.medianBlur(img,3)
+
+#subplot(row,col,sequence)
+plt.subplot(2,2,1),plt.imshow(img),plt.title("Original Image")
+plt.subplot(2,2,2),plt.imshow(blurred_img1),plt.title("Box Blur")
+plt.subplot(2,2,3),plt.imshow(blurred_img2),plt.title("Gaussian Blur")
+plt.subplot(2,2,4),plt.imshow(blurred_img3),plt.title("Median Blur")
+
+=====================================
+edge detection
+
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt
+img=cv2.imread("1.jpg")
+
+img=cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
+
+plt.figure(figsize=(15,6))
+
+sobelx=cv2.Sobel(img,cv2.CV_64F,1,0,5)
+sobely=cv2.Sobel(img,cv2.CV_64F,0,1,5)
+
+laplacian_img=cv2.Laplacian(img,cv2.CV_64F)
+
+Canny_img=cv2.Canny(img,50,150)
+
+plt.subplot(1,4,1),plt.imshow(sobelx,cmap="gray")
+plt.subplot(1,4,2),plt.imshow(sobely,cmap="gray")
+plt.subplot(1,4,3),plt.imshow(laplacian_img,cmap="gray")
+plt.subplot(1,4,4),plt.imshow(Canny_img,cmap="gray")
+======================================================
+object detection
+
+import cv2
+img=cv2.imread("2.jpg",cv2.IMREAD_COLOR)
+
+face_cascade=cv2.CascadeClassifier("haarcascade_frontalface_default.xml")
+
+grey_img=cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
+
+faces=face_cascade.detectMultiScale(grey_img,1.1,4)
+
+print(faces)
+
+for (x,y,w,h) in faces:
+	cv2.rectangle(img,(x,y),(x+w,y+h),(0,255,0),3)
+cv2.imshow("face Detector",img)
+
+cv2.waitKey(5000)
+
+cv2.destroyAllWindows()
+=========================================================
+sharpning
+
+import cv2
+import matplotlib.pyplot as plt
+import numpy as np
+
+img = cv2.imread("1.jpg")
+img = cv2.cvtColor(img,cv2.COLOR_BGR2RGB)
+
+#Sharpening
+k1 = np.array([[-1,-1,-1],[-1,9,-1],[-1,-1,-1]])
+k2 = np.array([[1,1,1],[1,-7,1],[1,1,1]])
+new_img1 = cv2.filter2D(img,-1,k1)
+new_img2 = cv2.filter2D(img,-1,k2)
+
+plt.subplot(1,3,1),plt.imshow(img)
+plt.subplot(1,3,2),plt.imshow(new_img1)
+plt.subplot(1,3,3),plt.imshow(new_img2)
+==============================================
+regression
+
+import pandas as pd
+from sklearn import linear_model
+import numpy as np
+import matplotlib.pyplot as plt
+
+data=pd.read_csv('Data_Advertising.csv')
+x=np.array(data.TV).reshape(-1,1)
+y=np.array(data.sales).reshape(-1,1)
+
+lr_model=linear_model.LinearRegression()
+lr_model.fit(x,y)
+xtest=x
+ytest=lr_model.predict(xtest)
+
+# print(xtest)
+# print(ytest)
+
+plt.scatter (x,y,color='blue')
+plt.scatter (x,ytest, color='red')
+plt.show()
+-----------------------------------
+import pandas as pd
+from sklearn import linear_model
+import numpy as np
+import matplotlib.pyplot as plt
+
+data=pd.read_csv('insurance.csv')
+print(data)
+x=np.array(data.age).reshape(-1,1)
+y=np.array(data.bmi).reshape(-1,1)
+
+lr_model=linear_model.LinearRegression()
+lr_model.fit(x,y)
+xtest=x
+ytest=lr_model.predict(xtest)
+
+# print(xtest)
+# print(ytest)
+
+plt.scatter (x,y,color='blue')
+plt.scatter (x,ytest, color='red')
+plt.show()
+=================================================
+clustering
+
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn import metrics
+from sklearn.cluster import KMeans
+import pandas as pd
+
+data = pd.read_csv("Wholesale customers data.csv")
+
+x=data["Fresh"]
+y=data["Grocery"]
+
+data=list(zip(x,y))
+
+plt.figure()
+plt.scatter(x,y, marker='o',facecolors='none', edgecolors='k', s=30)
+plt.title('Input data')
+plt.xticks(())
+plt.yticks(())
+
+kmeans=KMeans(init='k-means++',n_clusters=4)
+
+kmeans.fit(data)
+
+results=kmeans.predict(data)
+print(results)
+
+centroids=kmeans.cluster_centers_
+print(centroids)
+
+plt.figure()
+plt.scatter(x,y,marker='o',facecolors='none',edgecolors='k',s=30)
+plt.scatter(centroids[:,0],centroids[:,1],marker='o',s=200,color='r')
+plt.title('centroids on boundaries obtained using KMeans')
+==================================================
+tokenizer
+
+# import nltk
+nltk.download()
+
+from nltk import sent_tokenize
+
+text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
+output=sent_tokenize(text)
+print(output)
+
+
+from nltk import word_tokenize
+
+text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
+output=word_tokenize(text)
+print(output)
+
+
+
+from nltk import WordPunctTokenizer
+
+text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
+model = WordPunctTokenizer()
+output=model.tokenize(text)
+print(output)
+
+
+
+===================================================
+stemmimg
+
+from nltk.stem.porter import PorterStemmer
+from nltk.stem.lancaster import LancasterStemmer
+from nltk.stem.snowball import SnowballStemmer
+
+words=['Table','Ice-cream','Commanly','talking','Buying']
+
+#Easy to use
+stemmer_porter=PorterStemmer()
+#complex to small words
+lancaster_porter=LancasterStemmer()
+#Multilan.
+snowball_porter=SnowballStemmer('english')
+
+# for word in words:
+#     stemmed_words=[snowball_porter.stem(word)]
+#     print(word,stemmed_words)
+
+# for word in words:
+#     stemmed_words=[lancaster_porter.stem(word)]
+#     print(word,stemmed_words)
+
+for word in words:
+    stemmed_words=[stemmer_porter.stem(word)]
+    print(word,stemmed_words)
